@@ -60,7 +60,31 @@ function displayContactDetails(addressBookToDisplay)  {
   contactsList.html(htmlForContactInfo);
 };
 
+function showContact(contactID) {
+  const contact = addressBook.findContact(contactID)
+  $("#show-contact").show();
+  $(".first-name").html(contact.firstName);
+  $(".last-name").html(contact.lastName);
+  $(".phone-number").html(contact.phoneNumber);
+  let buttons = $("#buttons");
+  buttons.empty();
+  buttons.append("<button class='deleteButton' id=" + + contact.id +">Delete</button>");
+}
+
+function attachContactListeners() {
+  $("ul#contacts").on("click", "li", function() {
+    showContact(this.id);
+    //console.log("The id of this <li> is " + this.id + ".");
+  });
+  $("#buttons").on("click", ".deleteButton", function() {
+    addressBook.deletecontact(this.id);
+    $("#show-contact").hide();
+    displayContactDetails(addressBook);
+  });
+};
+
 $(document).ready(function()  {
+  attachContactListeners();
   $("form#new-contact").submit(function(event)  {
     event.preventDefault();;
     const inputtedFirstName = $("input#new-first-name").val();
@@ -71,3 +95,4 @@ $(document).ready(function()  {
     displayContactDetails(addressBook);
   });
 });
+
